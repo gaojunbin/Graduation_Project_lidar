@@ -1,3 +1,10 @@
-## 毕业设计代码整理（持续更新）
-**Author:gao.junbin**  
-**time:2018.12**
+## Organize Codes in Graduation-Project（updating...）
+
+**@Author  Junbin Gao**  
+
+**@data    2019.12**
+
+**@version v1.0.0**
+
+
+
