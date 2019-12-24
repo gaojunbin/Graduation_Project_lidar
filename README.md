@@ -21,7 +21,10 @@ Finally about the Livox SDK, this is written with C language, and made by cmake.
 The cloud-data-copy codes is in the c document ```mylidar/main.c```, and its makefile is also in the same directory. I will upload the whole SDK project to github. You can download it directly. You can also copy the mylidar directory to your computer's SDK projects, but don't forget add the root makefile.txt needed information. About the the specific content of main.c, I will decribe in the SDK project.
 
 + some pyhon files to deal with the data sets
-++ about images
+
+About Image information:
+
+To be continued......
 
 
 
