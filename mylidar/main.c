@@ -1,8 +1,9 @@
 /*********************************************************
-* SDK采集点云数据（激光雷达采集图像程序）
-* 〈设定采集范围〉〈设定采集图片数量〉〈设定每张图片采集的数量〉
-* @author [高君彬]
-* @version [20191209]
+* @file    main.c
+* @author  Junbin Gao
+* @data    2019.12
+* @version v1.0.2
+* @notes   use code to get cloud datas and save as csv files by batch
 *********************************************************/
 
 #include <stdio.h>
@@ -18,10 +19,10 @@
 #include "livox_sdk.h"
 
 
-#define NeedPointNumber 900000 // 每幅图像需要的点云数量
-#define NeedFigureNumber 1     // 需要采集的图像数量
+#define NeedPointNumber 900000 // the number of points you need in each figure
+#define NeedFigureNumber 1     // the number of figures you need
 
-#define CSV_FILE true          // 是否需要保存成csv文件
+#define CSV_FILE true          // is to need save as csv files or only read in terminal
 
 typedef enum
 {
