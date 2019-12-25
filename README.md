@@ -27,7 +27,3 @@ About Image information:
 To be continued......
 
 
-
-
-
-
