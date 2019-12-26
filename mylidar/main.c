@@ -18,9 +18,8 @@
 #include <apr_getopt.h>
 #include "livox_sdk.h"
 
-
-#define NeedPointNumber 900000 // the number of points you need in each figure
-#define NeedFigureNumber 1     // the number of figures you need
+#define NeedPointNumber 900000 // the number of points you need in each image
+#define NeedFigureNumber 1     // the number of images you need
 
 #define CSV_FILE true          // is to need save as csv files or only read in terminal
 
@@ -56,37 +55,38 @@ char broadcast_code_list[kMaxLidarCount][kBroadcastCodeSize] = {
   "000000000000004"
 };*/
 
-/** 文件的创建函数 Start */
+/** creat new file function Start */
 uint8_t New_File(char *name, FILE *fp)
 {
   fp = fopen(name, "w");
   fprintf(fp, "pointnumber,timestamp,handle,x,y,z,reflectivity\n");
-  //  printf("创建数据文件成功！");
+  //  printf("creat new file successfully！");
   fclose(fp);
   return 0;
 }
-/** 文件的创建函数 End */
+/** creat new file function End */
 
-uint32_t ExistPointNumber  = 0;  //当前图像正在采集的点云数量
-uint32_t ExistFigureNumber = 0;  //程序采集的图像数量
+uint32_t ExistPointNumber  = 0;  //the number of points in current image you have already obtained 
+uint32_t ExistFigureNumber = 0;  //the number of images you have already obtained
 
-bool CompleteReceive = false;    //完成采集标志位
+bool CompleteReceive = false;    //the flag of is completing receive or not
 
-char file_name[30];   //用于存储csv文件名
-FILE *filepoint;      //用于操作当前文件
+char file_name[30];   //to save the name of the files we will create
+FILE *filepoint;      
 /** Receiving point cloud data from Livox LiDAR. */
-/** 核心处理函数 
- * #par#
- * handele:激光雷达的编号 0，1，2
- * data：收集到的数据
- * data_num：未知
- * client_data：未知
+/* @func_name:  GetLidarData
+ * @note:       core function to get the cloud data
+ * @param:
+ * handle:      the flag of lidar ID (0，1，2)
+ * data：       the datas of we need
+ * data_num：   unknow
+ * client_data：unknow
 */
 void GetLidarData(uint8_t handle, LivoxEthPacket *data, uint32_t data_num, void *client_data)
 {
 	
-  static uint64_t cur_timestamp = 0; //当前时间戳
-  static uint64_t RunFlag = 0;       //回调函数正常运行标志位
+  static uint64_t cur_timestamp = 0; //save the timestamp to make sure the consistency in one image
+  static uint64_t RunFlag = 0;       //is GetLidarData() function running correctly
 
   RunFlag++;
 
@@ -96,26 +96,22 @@ void GetLidarData(uint8_t handle, LivoxEthPacket *data, uint32_t data_num, void 
     RunFlag=0;
   }
 
-  if (data) //存在数据
+  if (data) //exist data
   {
- 
-    if (ExistFigureNumber < NeedFigureNumber) //已经采集的图像未达到需要采集的上限
+    if (ExistFigureNumber < NeedFigureNumber) //images we have got is not enough
     {
       LivoxRawPoint *p_point_data = (LivoxRawPoint *)data->data;
       int x = (*p_point_data).x;
       int y = (*p_point_data).y;
       int z = (*p_point_data).z;
-      int r = (*p_point_data).reflectivity; //暂存数据
+      int r = (*p_point_data).reflectivity; //temporary saving datas
 
-      //if ((y < 1887) && (y > -1743) && (z > -993) && (z < 2054)) //数据在需要采集的范围中
-      if (1) //数据在需要采集的范围中
+      //if ((y < 1887) && (y > -1743) && (z > -993) && (z < 2054)) //we can choose areas to get 
+      if (1) //we can also get all datas that the lidar giving
       {
-
-        
-        if (ExistPointNumber == 0) //如果当前数据是所采集图像的第一个点，则创建新文件
+        if (ExistPointNumber == 0) //if current data is the first point in the image, then creat new file
         {
-          cur_timestamp = *((uint64_t *)(data->timestamp));
-
+          cur_timestamp = *((uint64_t *)(data->timestamp);  //refresh current timestamp
           if (CSV_FILE == true)
           {
             sprintf(file_name, "CloudData_%d.csv", ExistFigureNumber + 1);
@@ -127,33 +123,33 @@ void GetLidarData(uint8_t handle, LivoxEthPacket *data, uint32_t data_num, void 
           }
         }
 
-        if (ExistPointNumber < NeedPointNumber) //当前采集图像数据点还未达到每幅图像所需数量
+        if (ExistPointNumber < NeedPointNumber) //points in current image we have got is not enough
         {
           ExistPointNumber = ExistPointNumber + 1;
           if (CSV_FILE == true)
           {
-            if (filepoint == NULL)           //判断如果文件指针为空
+            if (filepoint == NULL)         
             {
-              printf("文件不存在\n");
-              exit(0); //在以0的形式退出，必须在文件开头有#include <stdlib.h>,stdlib 头文件即standard library标准库头文件
+              printf("the file can not found\n");
+              exit(0);
             }
             fprintf(filepoint, "%d,%ld,%d,%d,%d,%d,%d\n", ExistPointNumber, cur_timestamp, handle, x, y, z, r); //!!!!!尤其注意这里要用逗号隔开，因为excel表里面就默认识别逗号隔开的才能分类fprintf（文件指针，格式字符串，列表）
           }
           else
           {
-            printf("数据包为：%d,%ld,%d,%d,%d,%d,%d\n", ExistPointNumber, cur_timestamp, handle, x, y, z, r);
+            printf("the data is：%d,%ld,%d,%d,%d,%d,%d\n", ExistPointNumber, cur_timestamp, handle, x, y, z, r);
           }
           
           if (ExistPointNumber % 500 == 0)
           {
-            printf("图像正在采集，请稍后……%d\n",ExistPointNumber);
+            printf("collecting……(%d)\n",ExistPointNumber);
           }
         }
-        else    //当前图像已经采样了足够数量的点
+        else 
         {
           if (CSV_FILE == true)
           {
-	          fclose(filepoint);
+	      fclose(filepoint);
           }
           ExistFigureNumber = ExistFigureNumber + 1;
           printf("第%d幅图像采集完成，收集点云数量:%d\n", ExistFigureNumber, ExistPointNumber);
@@ -167,18 +163,6 @@ void GetLidarData(uint8_t handle, LivoxEthPacket *data, uint32_t data_num, void 
       printf("已经采集完成所需数量的图像\n");
     }
   }
-
-  // data_recveive_count[handle] += data_num;
-  // if (data_recveive_count[handle] % 10000 == 0) {
-  //   printf("receive packet count %d %d\n", handle, data_recveive_count[handle]);
-
-  //   /** Parsing the timestamp and the point cloud data. */
-  //   uint64_t cur_timestamp = *((uint64_t *)(data->timestamp));
-  //   LivoxRawPoint *p_point_data = (LivoxRawPoint *)data->data;
-  //   printf("x:%d,y:%d,z:%d,reflectivity:%d\n", p_point_data[0],p_point_data[1],p_point_data[2],p_point_data[3]);
-  // }
-
-  //}
 }
 
 /** Callback function of starting sampling. */
