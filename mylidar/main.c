@@ -18,8 +18,8 @@
 #include <apr_getopt.h>
 #include "livox_sdk.h"
 
-#define NeedPointNumber 900000 // the number of points you need in each image
-#define NeedFigureNumber 1     // the number of images you need
+#define NeedPointNumber 50000  // the number of points you need in each image
+#define NeedFigureNumber 100   // the number of images you need
 
 #define CSV_FILE true          // is to need save as csv files or only read in terminal
 
@@ -117,7 +117,7 @@ void GetLidarData(uint8_t handle, LivoxEthPacket *data, uint32_t data_num, void 
             sprintf(file_name, "CloudData_%d.csv", ExistFigureNumber + 1);
             if (New_File(file_name, filepoint) == 0)
             {
-              printf("CloudData_%d.csv创建成功\n", ExistFigureNumber + 1);
+              printf("CloudData_%d.csv is created\n", ExistFigureNumber + 1);
               filepoint = fopen(file_name, "a");
             }
           }
@@ -140,7 +140,7 @@ void GetLidarData(uint8_t handle, LivoxEthPacket *data, uint32_t data_num, void 
             printf("the data is：%d,%ld,%d,%d,%d,%d,%d\n", ExistPointNumber, cur_timestamp, handle, x, y, z, r);
           }
           
-          if (ExistPointNumber % 500 == 0)
+          if (ExistPointNumber % 10000 == 0)
           {
             printf("collecting……(%d)\n",ExistPointNumber);
           }
@@ -152,7 +152,7 @@ void GetLidarData(uint8_t handle, LivoxEthPacket *data, uint32_t data_num, void 
 	      fclose(filepoint);
           }
           ExistFigureNumber = ExistFigureNumber + 1;
-          printf("第%d幅图像采集完成，收集点云数量:%d\n", ExistFigureNumber, ExistPointNumber);
+          printf("the %dst images is done，gets:%d points\n", ExistFigureNumber, ExistPointNumber);
           ExistPointNumber = 0;
         }
       }
@@ -160,7 +160,7 @@ void GetLidarData(uint8_t handle, LivoxEthPacket *data, uint32_t data_num, void 
     else
     {
       CompleteReceive = true;
-      printf("已经采集完成所需数量的图像\n");
+      printf("successful,thanks for using!\n");
     }
   }
 }
