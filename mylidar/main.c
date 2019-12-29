@@ -111,7 +111,7 @@ void GetLidarData(uint8_t handle, LivoxEthPacket *data, uint32_t data_num, void 
       {
         if (ExistPointNumber == 0) //if current data is the first point in the image, then creat new file
         {
-          cur_timestamp = *((uint64_t *)(data->timestamp);  //refresh current timestamp
+          cur_timestamp = *((uint64_t *)(data->timestamp));  //refresh current timestamp
           if (CSV_FILE == true)
           {
             sprintf(file_name, "CloudData_%d.csv", ExistFigureNumber + 1);
