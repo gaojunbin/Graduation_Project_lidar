@@ -1,0 +1,1 @@
+/Library/Developer/CommandLineTools/usr/bin/c++   -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/hub_sample_cc.dir/lds_hub.cpp.o CMakeFiles/hub_sample_cc.dir/main.cpp.o  -o hub_sample_cc ../../sdk_core/liblivox_sdk_static.a -lapr-1 -lpthread /usr/local/lib/libboost_system.dylib 

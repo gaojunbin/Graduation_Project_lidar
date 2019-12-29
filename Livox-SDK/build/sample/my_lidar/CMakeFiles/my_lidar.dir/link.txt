@@ -1,0 +1,1 @@
+/Library/Developer/CommandLineTools/usr/bin/c++   -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/my_lidar.dir/main.c.o  -o my_lidar ../../sdk_core/liblivox_sdk_static.a -lapr-1 -lpthread /usr/local/lib/libboost_system.dylib 
